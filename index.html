@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Calculadora de Horas</title>
+		<script src="./main.js"></script>
+		<link rel="stylesheet" href="stylesheet.css" />
+	</head>
+	<body>
+		<section class="row">
+			<label for="horasTotales">Horas Totales</label>
+			<input type="time" id="horasTotales" name="horasTotales" value="08:30" />
+		</section>
+		<section class="row">
+			<label for="entrada">Hora Entrada</label>
+			<input type="time" id="entrada" name="entrada" />
+			<button id="btn_entrada">Ahora</button>
+		</section>
+		<section class="row">
+			<div>
+				<label for="salida_almuerzo">Salida Almuerzo</label>
+				<input type="time" id="salida_almuerzo" />
+				<button id="btn_salida_almuerzo">Ahora</button>
+			</div>
+
+			<div>
+				<label for="vuelta_almuerzo">Vuelta Almuerzo</label>
+				<input type="time" id="vuelta_almuerzo" />
+				<button id="btn_vuelta_almuerzo">Ahora</button>
+			</div>
+			<label for="">Total Almuerzo: <span id="total_almuerzo"></span></label>
+		</section>
+		<section class="row">
+			<label for="salida_comida">Salida Comida</label>
+			<input type="time" id="salida_comida" />
+			<button id="btn_salida_comida">Ahora</button>
+
+			<label for="vuelta_comida">Vuelta Comida</label>
+			<input type="time" id="vuelta_comida" />
+			<button id="btn_vuelta_comida">Ahora</button>
+			<label for="">Total Comida: <span id="total_comida"></span></label>
+		</section>
+		<section>
+			<label for="">Hora de salida: <span id="salida"></span></label>
+		</section>
+	</body>
+</html>
