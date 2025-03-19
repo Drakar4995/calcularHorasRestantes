@@ -12,22 +12,82 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const salida = document.getElementById("salida");
 
+    const btn_resetear = document.getElementById("btn_resetear");
     const btn_entrada = document.getElementById("btn_entrada");
     const btn_salida_almuerzo = document.getElementById("btn_salida_almuerzo");
     const btn_vuelta_almuerzo = document.getElementById("btn_vuelta_almuerzo");
     const btn_salida_comida = document.getElementById("btn_salida_comida");
     const btn_vuelta_comida = document.getElementById("btn_vuelta_comida");
-
+    
+    function getCurrentDate() {
+        const now = new Date();
+        return now.toISOString().split('T')[0];
+    }
     // Función para asignar la hora actual a un input
     function SetNowToInput(id) {
         const now = new Date();
         const horas = now.getHours().toString().padStart(2, "0");
         const minutos = now.getMinutes().toString().padStart(2, "0");
         document.getElementById(id).value = `${horas}:${minutos}`;
+        saveData();
         calcularTotal(); // Recalcular todo cuando se actualice un input
     }
 
+    function saveData() {
+        const data = {
+            fecha: getCurrentDate(),
+            entrada: entrada.value,
+            salidaAlmuerzo: salidaAlmuerzo.value,
+            vueltaAlmuerzo: vueltaAlmuerzo.value,
+            salidaComida: salidaComida.value,
+            vueltaComida: vueltaComida.value,
+            horasTotales: horasTotales.value
+        };
+        localStorage.setItem("workHoursData", JSON.stringify(data));
+    }
+     function loadData() {
+    const savedData = localStorage.getItem("workHoursData");
+    const today = new Date().getDay(); // Obtiene el día de la semana (0 = Domingo, 5 = Viernes)
+
+    if (savedData) {
+        const data = JSON.parse(savedData);
+        const lastSavedDate = data.fecha || "";
+
+        if (lastSavedDate !== getCurrentDate()) {
+            resetData();
+        } else {
+            entrada.value = data.entrada || "";
+            salidaAlmuerzo.value = data.salidaAlmuerzo || "";
+            vueltaAlmuerzo.value = data.vueltaAlmuerzo || "";
+            salidaComida.value = data.salidaComida || "";
+            vueltaComida.value = data.vueltaComida || "";
+            
+            // Si es viernes, poner 06:00; si no, 08:30
+            horasTotales.value = data.horasTotales || (today === 5 ? "06:00" : "08:30");
+
+            calcularTotal();
+        }
+    } else {
+        resetData();
+    }
+}
+
+     function resetData() {
+        entrada.value = "";
+        salidaAlmuerzo.value = "";
+        vueltaAlmuerzo.value = "";
+        salidaComida.value = "";
+        vueltaComida.value = "";
+        horasTotales.value = "08:30";
+        salida.textContent = "";
+        saveData();
+    }
+
     // Asociar eventos a los botones
+    btn_resetear.addEventListener("click",()=>{
+        if (confirm("¿Estás seguro de que quieres resetear todos los datos?")) {
+        resetData(); // Solo se ejecuta si el usuario confirma
+    }})
     btn_salida_almuerzo.addEventListener("click", () => SetNowToInput("salida_almuerzo"));
     btn_vuelta_almuerzo.addEventListener("click", () => SetNowToInput("vuelta_almuerzo"));
     btn_salida_comida.addEventListener("click", () => {SetNowToInput("salida_comida"); setVueltaComida()});
@@ -69,6 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let horas = horaSalida.getHours().toString().padStart(2, "0");
             let minutos = horaSalida.getMinutes().toString().padStart(2, "0");
             vueltaComida.value = `${horas}:${minutos}`;
+            saveData();
         }
     }
 
@@ -104,4 +165,5 @@ document.addEventListener("DOMContentLoaded", function () {
             salida.textContent = `${horasSalida}:${minutosSalida}`;
         }
     }
+    loadData();
 });
